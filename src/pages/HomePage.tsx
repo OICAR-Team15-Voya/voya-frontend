@@ -21,7 +21,10 @@ function HomePage() {
       <button onClick={() => navigate('/profile')}>Moj profil</button>
 
       {isAdmin && (
-        <button onClick={() => navigate('/users')}>Svi korisnici</button>
+        <>
+          <button onClick={() => navigate('/users')}>Svi korisnici</button>
+          <button onClick={() => navigate('/drivers')}>Vozači</button>
+        </>
       )}
 
       <button onClick={handleLogout}>Odjavi se</button>

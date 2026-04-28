@@ -20,7 +20,6 @@ function LoginPage() {
 
       console.log('Login uspješan:', response.data);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('token', response.data.token);
       localStorage.setItem('currentUser', JSON.stringify(response.data)); 
       navigate('/');
     } catch (err) {

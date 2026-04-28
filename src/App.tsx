@@ -3,6 +3,8 @@ import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
 import UsersPage from './pages/UsersPage';
+import DriversPage from './pages/DriversPage';
+import DriverFormPage from './pages/DriverFormPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -31,6 +33,22 @@ function App() {
           element={
             <ProtectedRoute roles={['ADMIN']}>
               <UsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/drivers"
+          element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <DriversPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/drivers/new"
+          element={
+            <ProtectedRoute roles={['ADMIN']}>
+              <DriverFormPage />
             </ProtectedRoute>
           }
         />

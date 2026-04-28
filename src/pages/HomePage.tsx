@@ -5,6 +5,7 @@ function HomePage() {
 
   function handleLogout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('currentUser');
     navigate('/login');
   }
 
@@ -12,6 +13,7 @@ function HomePage() {
     <div>
       <h1>VOYA Dispatch Console</h1>
       <p>Dobrodošao!</p>
+      <button onClick={() => navigate('/profile')}>Moj profil</button>
       <button onClick={handleLogout}>Odjavi se</button>
     </div>
   );

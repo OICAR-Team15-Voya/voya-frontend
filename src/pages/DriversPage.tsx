@@ -83,6 +83,10 @@ function DriversPage() {
                 <td>{driver.phone}</td>
                 <td>{driver.licenseValidUntil}</td>
                 <td>
+                  <button onClick={() => navigate(`/drivers/${driver.id}/edit`)}>
+                  Uredi
+                  </button>
+                  {' '}
                   <button onClick={() => handleDelete(driver.id)}>
                     Obriši
                   </button>

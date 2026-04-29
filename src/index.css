@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  /* Tipografija */
+  --font-display: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Pozadine */
+  --color-canvas: #0A0A0A;
+  --color-surface: #171717;
+  --color-surface-elevated: #212121;
+
+  /* Tekst */
+  --color-ink: #F5F5F5;
+  --color-ink-soft: #A3A3A3;
+  --color-ink-muted: #737373;
+
+  /* Linije */
+  --color-rule: #2A2A2A;
+  --color-rule-strong: #404040;
+
+  /* Zlato (akcent) */
+  --color-gold: #D4AF37;
+  --color-gold-soft: #E6C875;
+  --color-gold-faint: #2A2416;
+
+  /* Stanja */
+  --color-success: #10B981;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+}
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-canvas);
+}
+
+/* Suptilna paper grain tekstura na pozadini */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.04), transparent 40%),
+                    radial-gradient(circle at 80% 70%, rgba(212, 175, 55, 0.03), transparent 50%);
+  z-index: 1;
+}
+
+#root {
+  position: relative;
+  z-index: 2;
+}

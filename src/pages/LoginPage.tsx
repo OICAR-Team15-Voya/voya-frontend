@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import axios from 'axios';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -20,7 +21,11 @@ function LoginPage() {
       localStorage.setItem('currentUser', JSON.stringify(response.data));
       navigate('/');
     } catch (err) {
-      setError('Pogrešan email ili lozinka.');
+      if(axios.isAxiosError(err) && err.response?.status === 403) {
+        setError(err.response.data);
+      } else {
+          setError('Pogrešan email ili lozinka.');
+        }
       console.error(err);
     }
   }

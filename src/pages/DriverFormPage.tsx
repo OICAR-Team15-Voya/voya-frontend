@@ -1,16 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { api } from '../lib/api';
-
-interface Driver {
-  id: number;
-  userId: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  licenseValidUntil: string;
-}
+import { driverService } from '../services/driverService';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
 
 function DriverFormPage() {
   const navigate = useNavigate();
@@ -29,14 +21,14 @@ function DriverFormPage() {
   const [error, setError] = useState('');
 
   const loadDriver = useCallback(async () => {
+    if (!id) return;
     try {
-      const response = await api.get<Driver>(`/voya/api/drivers/${id}`);
-      const d = response.data;
-      setFirstName(d.firstName);
-      setLastName(d.lastName);
-      setEmail(d.email);
-      setPhone(d.phone);
-      setLicenseValidUntil(d.licenseValidUntil);
+      const driver = await driverService.getById(Number(id));
+      setFirstName(driver.firstName);
+      setLastName(driver.lastName);
+      setEmail(driver.email);
+      setPhone(driver.phone);
+      setLicenseValidUntil(driver.licenseValidUntil);
     } catch (err) {
       setError('Vozač nije pronađen.');
       console.error(err);
@@ -57,8 +49,8 @@ function DriverFormPage() {
     setSubmitting(true);
 
     try {
-      if (isEditMode) {
-        await api.put(`/voya/api/drivers/${id}`, {
+      if (isEditMode && id) {
+        await driverService.update(Number(id), {
           firstName,
           lastName,
           email,
@@ -66,7 +58,7 @@ function DriverFormPage() {
           licenseValidUntil,
         });
       } else {
-        await api.post('/voya/api/drivers', {
+        await driverService.create({
           firstName,
           lastName,
           email,
@@ -84,85 +76,98 @@ function DriverFormPage() {
     }
   }
 
-  if (loading) return <p>Učitavanje...</p>;
+  if (loading) {
+    return (
+      <div className="p-8 text-sm text-[var(--color-ink-soft)]">Učitavanje...</div>
+    );
+  }
 
   return (
-    <div>
-      <h1>{isEditMode ? 'Uredi vozača' : 'Novi vozač'}</h1>
+    <div className="p-8">
+      <div className="text-[10px] tracking-[0.3em] text-[var(--color-ink-muted)] mb-2 uppercase">
+        {isEditMode ? 'Uredi vozača' : 'Novi unos'}
+      </div>
+      <h1
+        className="text-4xl font-light mb-10"
+        style={{ fontFamily: 'var(--font-display)' }}
+      >
+        {isEditMode ? 'Uredi vozača' : 'Novi vozač'}
+      </h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Ime:</label>{' '}
-          <input
-            type="text"
+      <form onSubmit={handleSubmit} className="max-w-xl space-y-6">
+        <div className="grid grid-cols-2 gap-6">
+          <Input
+            name="firstName"
+            label="Ime"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
-        </div>
-
-        <div>
-          <label>Prezime:</label>{' '}
-          <input
-            type="text"
+          <Input
+            name="lastName"
+            label="Prezime"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             required
           />
         </div>
 
-        <div>
-          <label>Email:</label>{' '}
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
+        <Input
+          name="email"
+          type="email"
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-        <div>
-          <label>Telefon:</label>{' '}
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
+        <Input
+          name="phone"
+          type="tel"
+          label="Telefon"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
 
         {!isEditMode && (
-          <div>
-            <label>Lozinka:</label>{' '}
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
+          <Input
+            name="password"
+            type="password"
+            label="Lozinka"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+          />
+        )}
+
+        <Input
+          name="licenseValidUntil"
+          type="date"
+          label="Vozačka vrijedi do"
+          value={licenseValidUntil}
+          onChange={(e) => setLicenseValidUntil(e.target.value)}
+          required
+        />
+
+        {error && (
+          <div className="text-xs text-[var(--color-danger)] border border-[var(--color-danger)]/30 bg-[var(--color-danger)]/10 px-3 py-2 rounded-sm">
+            {error}
           </div>
         )}
 
-        <div>
-          <label>Vozačka vrijedi do:</label>{' '}
-          <input
-            type="date"
-            value={licenseValidUntil}
-            onChange={(e) => setLicenseValidUntil(e.target.value)}
-            required
-          />
+        <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-rule)]">
+          <Button type="submit" disabled={submitting}>
+            {submitting ? 'Sprema...' : 'Spremi'}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => navigate('/drivers')}
+          >
+            Odustani
+          </Button>
         </div>
-
-        <br />
-        <button type="submit" disabled={submitting}>
-          {submitting ? 'Sprema...' : 'Spremi'}
-        </button>
-        {' '}
-        <button type="button" onClick={() => navigate('/drivers')}>
-          Odustani
-        </button>
-
-        {error && <p style={{ color: 'red' }}>{error}</p>}
       </form>
     </div>
   );

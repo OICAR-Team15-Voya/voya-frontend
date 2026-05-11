@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../lib/api';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import axios from 'axios';
+import { authService } from '../services/authService';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
@@ -16,10 +16,8 @@ function LoginPage() {
     setError('');
 
     try {
-      const response = await api.post('/voya/api/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('currentUser', JSON.stringify(response.data));
-      navigate('/');
+    await authService.login({ email, password });
+    navigate('/');
     } catch (err) {
       if(axios.isAxiosError(err) && err.response?.status === 403) {
         setError(err.response.data);

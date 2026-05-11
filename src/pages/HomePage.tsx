@@ -1,15 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { api } from '../lib/api';
-
-interface User {
-  id: number;
-  role: string;
-  status: boolean;
-}
-
-interface Driver {
-  id: number;
-}
+import type { User, Driver } from '../types';
 
 function HomePage() {
   const userJson = localStorage.getItem('currentUser');

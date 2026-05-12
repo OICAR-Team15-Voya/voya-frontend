@@ -8,8 +8,11 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Pregled' },
+  { to: '/reservations', label: 'Rezervacije', adminOnly: true },
   { to: '/users', label: 'Korisnici', adminOnly: true },
   { to: '/drivers', label: 'Vozači', adminOnly: true },
+  { to: '/vehicles', label: 'Vozila', adminOnly: true },
+  { to: '/vehicle-categories', label: 'Kategorije vozila', adminOnly: true },
   { to: '/profile', label: 'Profil' },
 ];
 

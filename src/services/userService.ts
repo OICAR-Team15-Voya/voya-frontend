@@ -3,7 +3,7 @@ import type { User } from '../types';
 
 /**
  * Sve operacije nad korisnicima.
- * Backend endpointi su pod /voya/api/users/...
+ * Backend endpointi su /voya/api/users/...
  */
 export const userService = {
   getAll: async (): Promise<User[]> => {

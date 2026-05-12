@@ -138,7 +138,7 @@ function UsersPage() {
   );
 }
 
-/* ---------- Lokalne pomoćne komponente ---------- */
+/* lokalne pomoćne komponente  */
 
 function Th({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (

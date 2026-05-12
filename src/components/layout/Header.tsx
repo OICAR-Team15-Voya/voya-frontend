@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/Button';
+import { authService } from '../../services/authService';
 
 export function Header() {
   const navigate = useNavigate();
@@ -7,8 +8,7 @@ export function Header() {
   const currentUser = userJson ? JSON.parse(userJson) : null;
 
   function handleLogout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
+    authService.logout();
     navigate('/login');
   }
 

@@ -63,6 +63,8 @@ export const reservationService = {
     return response.data;
   },
 
+
+  //treba doraditi patch
   setInProgress: async (id: number): Promise<void> => {
     await api.patch(`/voya/api/reservations/set-in-progress/${id}`);
   },

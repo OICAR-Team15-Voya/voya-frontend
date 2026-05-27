@@ -4,10 +4,12 @@ interface NavItem {
   to: string;
   label: string;
   adminOnly?: boolean;
+  driverOnly?: boolean;
 }
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Pregled' },
+  { to: '/my-rides', label: 'Moje vožnje', driverOnly: true },
   { to: '/reservations', label: 'Rezervacije', adminOnly: true },
   { to: '/users', label: 'Korisnici', adminOnly: true },
   { to: '/drivers', label: 'Vozači', adminOnly: true },
@@ -19,11 +21,15 @@ const NAV_ITEMS: NavItem[] = [
 export function Sidebar() {
   const userJson = localStorage.getItem('currentUser');
   const currentUser = userJson ? JSON.parse(userJson) : null;
-  const isAdmin = currentUser?.role === 'ADMIN';
+  const role = currentUser?.role;
+  const isAdmin = role === 'ADMIN';
+  const isDriver = role === 'DRIVER';
 
-  const visibleItems = NAV_ITEMS.filter(
-    (item) => !item.adminOnly || isAdmin,
-  );
+  const visibleItems = NAV_ITEMS.filter((item) => {
+    if (item.adminOnly && !isAdmin) return false;
+    if (item.driverOnly && !isDriver) return false;
+    return true;
+  });
 
   return (
     <aside className="w-56 bg-[var(--color-surface)] border-r border-[var(--color-rule)] flex flex-col">
@@ -36,7 +42,7 @@ export function Sidebar() {
           VOYA
         </div>
         <div className="text-[9px] tracking-[0.2em] text-[var(--color-ink-muted)] mt-1 uppercase">
-          Dispatch
+          {isDriver ? 'Driver Console' : 'Dispatch'}
         </div>
       </div>
 

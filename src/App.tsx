@@ -13,6 +13,7 @@ import VehiclesPage from "./pages/VehiclesPage";
 import ReservationsPage from "./pages/ReservationsPage";
 import ReservationFormPage from "./pages/ReservationFormPage";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
+import MyRidesPage from './pages/MyRidesPage';
 
 function App() {
   return (
@@ -127,6 +128,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/my-rides"
+            element={
+              <ProtectedRoute roles={["DRIVER"]}>
+                <MyRidesPage />
+              </ProtectedRoute>
+            } 
+            />
         </Route>
       </Routes>
     </BrowserRouter>

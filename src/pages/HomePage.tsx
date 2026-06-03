@@ -39,7 +39,7 @@ function HomePage() {
       } else {
         query = { days: Number(period) };
       }
-      const [usersRes, driversRes, statsRes] = await Promise.all([
+    const [usersRes, driversRes, statsRes] = await Promise.all([
         api.get<User[]>("/voya/api/users/all"),
         api.get<Driver[]>("/voya/api/drivers/all"),
         statisticsService.get(query),

@@ -13,7 +13,8 @@ import VehiclesPage from "./pages/VehiclesPage";
 import ReservationsPage from "./pages/ReservationsPage";
 import ReservationFormPage from "./pages/ReservationFormPage";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
-import MyRidesPage from './pages/MyRidesPage';
+import MyRidesPage from "./pages/MyRidesPage";
+import AdminFormPage from "./pages/AdminFormPage";
 
 function App() {
   return (
@@ -134,8 +135,16 @@ function App() {
               <ProtectedRoute roles={["DRIVER"]}>
                 <MyRidesPage />
               </ProtectedRoute>
-            } 
-            />
+            }
+          />
+          <Route
+            path="/users/new-admin"
+            element={
+              <ProtectedRoute roles={["ADMIN"]}>
+                <AdminFormPage />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

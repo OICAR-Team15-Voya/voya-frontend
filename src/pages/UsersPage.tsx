@@ -1,19 +1,21 @@
-import { useEffect, useState, useCallback } from 'react';
-import { userService } from '../services/userService';
-import { Button } from '../components/ui/Button';
-import type { User } from '../types';
+import { useEffect, useState, useCallback } from "react";
+import { userService } from "../services/userService";
+import { Button } from "../components/ui/Button";
+import type { User } from "../types";
+import { useNavigate } from "react-router-dom";
 
 function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const fetchUsers = useCallback(async () => {
     try {
       const data = await userService.getAll();
       setUsers(data);
     } catch (err) {
-      setError('Greška pri dohvaćanju korisnika.');
+      setError("Greška pri dohvaćanju korisnika.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -43,7 +45,7 @@ function UsersPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!window.confirm('Sigurno hoćeš obrisati korisnika?')) return;
+    if (!window.confirm("Sigurno hoćeš obrisati korisnika?")) return;
     try {
       await userService.delete(id);
       await fetchUsers();
@@ -63,12 +65,18 @@ function UsersPage() {
       <div className="flex items-baseline justify-between mb-8">
         <h1
           className="text-4xl font-light"
-          style={{ fontFamily: 'var(--font-display)' }}
+          style={{ fontFamily: "var(--font-display)" }}
         >
           Korisnici
         </h1>
-        <div className="text-sm text-[var(--color-ink-muted)]">
-          Ukupno: <span className="text-[var(--color-ink)]">{users.length}</span>
+        <div className="flex items-center gap-6">
+          <div className="text-sm text-[var(--color-ink-muted)]">
+            Ukupno:{" "}
+            <span className="text-[var(--color-ink)]">{users.length}</span>
+          </div>
+          <Button onClick={() => navigate("/users/new-admin")}>
+            + Novi admin
+          </Button>
         </div>
       </div>
 
@@ -93,8 +101,12 @@ function UsersPage() {
               >
                 <Td className="text-[var(--color-ink-muted)]">{user.id}</Td>
                 <Td>{user.email}</Td>
-                <Td>{user.firstName} {user.lastName || ''}</Td>
-                <Td className="text-[var(--color-ink-soft)]">{user.phone || '—'}</Td>
+                <Td>
+                  {user.firstName} {user.lastName || ""}
+                </Td>
+                <Td className="text-[var(--color-ink-soft)]">
+                  {user.phone || "—"}
+                </Td>
                 <Td>
                   <RoleBadge role={user.role} />
                 </Td>
@@ -140,7 +152,13 @@ function UsersPage() {
 
 /* lokalne pomoćne komponente  */
 
-function Th({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function Th({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <th
       className={`px-4 py-3 text-[10px] tracking-[0.2em] text-[var(--color-ink-muted)] uppercase font-normal ${className}`}
@@ -150,15 +168,21 @@ function Th({ children, className = '' }: { children: React.ReactNode; className
   );
 }
 
-function Td({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function Td({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return <td className={`px-4 py-3 ${className}`}>{children}</td>;
 }
 
 function RoleBadge({ role }: { role: string }) {
   const styles: Record<string, string> = {
-    ADMIN: 'text-[var(--color-gold)] border-[var(--color-gold)]/40',
-    DRIVER: 'text-[var(--color-ink)] border-[var(--color-rule-strong)]',
-    CLIENT: 'text-[var(--color-ink-soft)] border-[var(--color-rule)]',
+    ADMIN: "text-[var(--color-gold)] border-[var(--color-gold)]/40",
+    DRIVER: "text-[var(--color-ink)] border-[var(--color-rule-strong)]",
+    CLIENT: "text-[var(--color-ink-soft)] border-[var(--color-rule)]",
   };
   return (
     <span
@@ -175,30 +199,32 @@ function StatusBadge({ active }: { active: boolean }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 text-xs ${
-        active ? 'text-[var(--color-success)]' : 'text-[var(--color-ink-muted)]'
+        active ? "text-[var(--color-success)]" : "text-[var(--color-ink-muted)]"
       }`}
     >
       <span
         className={`w-1.5 h-1.5 rounded-full ${
-          active ? 'bg-[var(--color-success)]' : 'bg-[var(--color-ink-muted)]'
+          active ? "bg-[var(--color-success)]" : "bg-[var(--color-ink-muted)]"
         }`}
       />
-      {active ? 'Aktivan' : 'Neaktivan'}
+      {active ? "Aktivan" : "Neaktivan"}
     </span>
   );
 }
 
 function PageMessage({
   children,
-  tone = 'default',
+  tone = "default",
 }: {
   children: React.ReactNode;
-  tone?: 'default' | 'error';
+  tone?: "default" | "error";
 }) {
   return (
     <div
       className={`p-8 text-sm ${
-        tone === 'error' ? 'text-[var(--color-danger)]' : 'text-[var(--color-ink-soft)]'
+        tone === "error"
+          ? "text-[var(--color-danger)]"
+          : "text-[var(--color-ink-soft)]"
       }`}
     >
       {children}

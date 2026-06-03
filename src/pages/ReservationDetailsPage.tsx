@@ -117,9 +117,16 @@ function ReservationDetailsPage() {
           <span className="text-[var(--color-ink-muted)] mx-3">→</span>
           {reservation.dropoffLocation}
         </h1>
-        <StatusBadge status={reservation.status} />
-      </div>
-
+       <div className="flex items-center gap-3">
+    <Button
+      variant="outline"
+      onClick={() => navigate(`/reservations/${id}/edit`)}
+    >
+      Uredi detalje
+    </Button>
+    <StatusBadge status={reservation.status} />
+  </div>
+</div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Lijevo — informacije */}
         <div className="space-y-6">

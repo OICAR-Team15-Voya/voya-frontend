@@ -138,7 +138,7 @@ function HomePage() {
                 items={topN(
                   stats.driverReservationCount.map((d) => ({
                     id: d.driverId,
-                    label: `${d.firstName} ${d.lastName}`,
+                    label: `${d.driverName} ${d.driverLastName}`,
                     count: d.count,
                   })),
                 )}
@@ -159,7 +159,7 @@ function HomePage() {
                 items={topN(
                   stats.clientReservationCount.map((c) => ({
                     id: c.clientId,
-                    label: `${c.firstName} ${c.lastName}`,
+                    label: `${c.clientFirstName} ${c.clientLastName}`,
                     count: c.count,
                   })),
                 )}

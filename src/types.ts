@@ -92,3 +92,65 @@ export interface AuthResponse {
   lastName: string | null;
   role: Role;
 }
+
+// Statistike za dash
+export interface StatisticsDto {
+  totalRevenue: number;
+  totalReservations: number;
+  driverReservationCount: DriverReservationCount[];
+  vehicleReservationCount: VehicleReservationCount[];
+  clientReservationCount: ClientReservationCount[];
+}
+
+
+// Pojedinačni tipovi za statistike -  /voya/api/statistics
+export interface DriverReservationCount {
+  driverId: number;
+  firstName: string;
+  lastName: string;
+  count: number;
+}
+
+export interface VehicleReservationCount {
+  vehicleId: number;
+  name: string | null;
+  registration: string;
+  count: number;
+}
+
+export interface ClientReservationCount {
+  clientId: number;
+  firstName: string;
+  lastName: string;
+  count: number;
+}
+
+
+export interface DriverReservationCount {
+  driverId: number;
+  firstName: string;
+  lastName: string;
+  count: number;
+}
+
+export interface VehicleReservationCount {
+  vehicleId: number;
+  name: string | null;
+  registration: string;
+  count: number;
+}
+
+export interface ClientReservationCount {
+  clientId: number;
+  firstName: string;
+  lastName: string;
+  count: number;
+}
+
+export interface StatisticsDto {
+  totalRevenue: number;
+  totalReservations: number;
+  driverReservationCount: DriverReservationCount[];
+  vehicleReservationCount: VehicleReservationCount[];
+  clientReservationCount: ClientReservationCount[];
+}

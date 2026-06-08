@@ -1,11 +1,11 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { reservationService } from '../services/reservationService';
-import { userService } from '../services/userService';
-import { vehicleCategoryService } from '../services/vehicleCategoryService';
-import { Button } from '../components/ui/Button';
-import { Input } from '../components/ui/Input';
-import type { User, VehicleCategory } from '../types';
+import { useEffect, useState, useCallback } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { reservationService } from "../services/reservationService";
+import { userService } from "../services/userService";
+import { vehicleCategoryService } from "../services/vehicleCategoryService";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
+import type { User, VehicleCategory } from "../types";
 
 function ReservationFormPage() {
   const navigate = useNavigate();
@@ -15,19 +15,19 @@ function ReservationFormPage() {
   const [clients, setClients] = useState<User[]>([]);
   const [categories, setCategories] = useState<VehicleCategory[]>([]);
 
-  const [userId, setUserId] = useState<number | ''>('');
-  const [vehicleCategoryId, setVehicleCategoryId] = useState<number | ''>('');
-  const [time, setTime] = useState('');
-  const [pickupLocation, setPickupLocation] = useState('');
-  const [dropoffLocation, setDropoffLocation] = useState('');
-  const [passengerNumber, setPassengerNumber] = useState('');
-  const [luggageNumber, setLuggageNumber] = useState('');
-  const [welcomeSign, setWelcomeSign] = useState('');
-  const [additionalNotes, setAdditionalNotes] = useState('');
+  const [userId, setUserId] = useState<number | "">("");
+  const [vehicleCategoryId, setVehicleCategoryId] = useState<number | "">("");
+  const [time, setTime] = useState("");
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
+  const [passengerNumber, setPassengerNumber] = useState("");
+  const [luggageNumber, setLuggageNumber] = useState("");
+  const [welcomeSign, setWelcomeSign] = useState("");
+  const [additionalNotes, setAdditionalNotes] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -35,7 +35,7 @@ function ReservationFormPage() {
         userService.getAll(),
         vehicleCategoryService.getAll(),
       ]);
-      setClients(usersList.filter((u) => u.role === 'CLIENT' && u.status));
+      setClients(usersList.filter((u) => u.role === "CLIENT" && u.status));
       setCategories(catsList);
 
       if (isEditMode && id) {
@@ -45,13 +45,13 @@ function ReservationFormPage() {
         setTime(r.time.slice(0, 16)); // YYYY-MM-DDTHH:mm format za datetime-local
         setPickupLocation(r.pickupLocation);
         setDropoffLocation(r.dropoffLocation);
-        setPassengerNumber(r.passengerNumber?.toString() || '');
-        setLuggageNumber(r.luggageNumber?.toString() || '');
-        setWelcomeSign(r.welcomeSign || '');
-        setAdditionalNotes(r.additionalNotes || '');
+        setPassengerNumber(r.passengerNumber?.toString() || "");
+        setLuggageNumber(r.luggageNumber?.toString() || "");
+        setWelcomeSign(r.welcomeSign || "");
+        setAdditionalNotes(r.additionalNotes || "");
       }
     } catch (err) {
-      setError('Greška pri učitavanju.');
+      setError("Greška pri učitavanju.");
       console.error(err);
     } finally {
       setLoading(false);
@@ -65,10 +65,10 @@ function ReservationFormPage() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
     if (!userId || !vehicleCategoryId) {
-      setError('Odaberi klijenta i kategoriju.');
+      setError("Odaberi klijenta i kategoriju.");
       return;
     }
-    setError('');
+    setError("");
     setSubmitting(true);
 
     const payload = {
@@ -85,19 +85,23 @@ function ReservationFormPage() {
 
     try {
       if (isEditMode && id) {
-        // U edit modu ova forma šalje samo osnovne podatke;
-        // dodjelu vozača/vozila i status ostavljamo detaljnoj stranici
+        // U edit modu forma šalje samo osnovne podatke;
+        // dodjelu (vozač, vozilo, status, cijena, isPaid) čuvamo iz postojeće rezervacije
+        const existing = await reservationService.getById(Number(id));
         await reservationService.update(Number(id), {
           ...payload,
-          status: 'CONFIRMED',
-          isPaid: false,
+          driverId: existing.driverId,
+          vehicleId: existing.vehicleId,
+          status: existing.status,
+          price: existing.price,
+          isPaid: existing.isPaid,
         });
       } else {
         await reservationService.create(payload);
       }
-      navigate('/reservations');
+      navigate("/reservations");
     } catch (err) {
-      setError('Greška pri spremanju.');
+      setError("Greška pri spremanju.");
       console.error(err);
     } finally {
       setSubmitting(false);
@@ -105,7 +109,11 @@ function ReservationFormPage() {
   }
 
   if (loading) {
-    return <div className="p-8 text-sm text-[var(--color-ink-soft)]">Učitavanje...</div>;
+    return (
+      <div className="p-8 text-sm text-[var(--color-ink-soft)]">
+        Učitavanje...
+      </div>
+    );
   }
 
   if (clients.length === 0 || categories.length === 0) {
@@ -113,19 +121,20 @@ function ReservationFormPage() {
       <div className="p-8">
         <h1
           className="text-4xl font-light mb-4"
-          style={{ fontFamily: 'var(--font-display)' }}
+          style={{ fontFamily: "var(--font-display)" }}
         >
           Nedostaju preduvjeti
         </h1>
         <p className="text-sm text-[var(--color-ink-soft)] mb-6">
-          Za kreiranje rezervacije treba postojati barem jedan klijent i jedna kategorija vozila.
+          Za kreiranje rezervacije treba postojati barem jedan klijent i jedna
+          kategorija vozila.
         </p>
         <div className="flex gap-3">
           {clients.length === 0 && (
-            <Button onClick={() => navigate('/users')}>Idi na korisnike</Button>
+            <Button onClick={() => navigate("/users")}>Idi na korisnike</Button>
           )}
           {categories.length === 0 && (
-            <Button onClick={() => navigate('/vehicle-categories')}>
+            <Button onClick={() => navigate("/vehicle-categories")}>
               Idi na kategorije
             </Button>
           )}
@@ -137,13 +146,13 @@ function ReservationFormPage() {
   return (
     <div className="p-8">
       <div className="text-[10px] tracking-[0.3em] text-[var(--color-ink-muted)] mb-2 uppercase">
-        {isEditMode ? 'Uredi rezervaciju' : 'Novi unos'}
+        {isEditMode ? "Uredi rezervaciju" : "Novi unos"}
       </div>
       <h1
         className="text-4xl font-light mb-10"
-        style={{ fontFamily: 'var(--font-display)' }}
+        style={{ fontFamily: "var(--font-display)" }}
       >
-        {isEditMode ? 'Uredi rezervaciju' : 'Nova rezervacija'}
+        {isEditMode ? "Uredi rezervaciju" : "Nova rezervacija"}
       </h1>
 
       <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
@@ -154,7 +163,7 @@ function ReservationFormPage() {
           onChange={setUserId}
           options={clients.map((c) => ({
             value: c.id,
-            label: `${c.firstName} ${c.lastName || ''} · ${c.email}`,
+            label: `${c.firstName} ${c.lastName || ""} · ${c.email}`,
           }))}
         />
 
@@ -238,12 +247,12 @@ function ReservationFormPage() {
 
         <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-rule)]">
           <Button type="submit" disabled={submitting}>
-            {submitting ? 'Sprema...' : 'Spremi'}
+            {submitting ? "Sprema..." : "Spremi"}
           </Button>
           <Button
             type="button"
             variant="ghost"
-            onClick={() => navigate('/reservations')}
+            onClick={() => navigate("/reservations")}
           >
             Odustani
           </Button>
@@ -267,8 +276,8 @@ function Select({
   options,
 }: {
   label: string;
-  value: number | '';
-  onChange: (v: number | '') => void;
+  value: number | "";
+  onChange: (v: number | "") => void;
   options: SelectOption[];
 }) {
   return (
@@ -278,13 +287,19 @@ function Select({
       </label>
       <select
         value={value}
-        onChange={(e) => onChange(e.target.value ? Number(e.target.value) : '')}
+        onChange={(e) => onChange(e.target.value ? Number(e.target.value) : "")}
         required
         className="w-full bg-transparent border-b border-[var(--color-rule-strong)] py-2 text-[var(--color-ink)] focus:outline-none focus:border-[var(--color-gold)] transition-colors"
       >
-        <option value="" className="bg-[var(--color-surface)]">— odaberi —</option>
+        <option value="" className="bg-[var(--color-surface)]">
+          — odaberi —
+        </option>
         {options.map((opt) => (
-          <option key={opt.value} value={opt.value} className="bg-[var(--color-surface)]">
+          <option
+            key={opt.value}
+            value={opt.value}
+            className="bg-[var(--color-surface)]"
+          >
             {opt.label}
           </option>
         ))}

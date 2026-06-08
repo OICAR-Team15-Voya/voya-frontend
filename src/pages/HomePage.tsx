@@ -39,7 +39,7 @@ function HomePage() {
       } else {
         query = { days: Number(period) };
       }
-    const [usersRes, driversRes, statsRes] = await Promise.all([
+      const [usersRes, driversRes, statsRes] = await Promise.all([
         api.get<User[]>("/voya/api/users/all"),
         api.get<Driver[]>("/voya/api/drivers/all"),
         statisticsService.get(query),
@@ -148,9 +148,9 @@ function HomePage() {
                 items={topN(
                   stats.vehicleReservationCount.map((v) => ({
                     id: v.vehicleId,
-                    label: v.name || v.registration,
-                    hint: v.name ? v.registration : undefined,
-                    count: v.count,
+                    label: v.vehicleName || v.vehicleRegistration,
+                    hint: v.vehicleName ? v.vehicleRegistration : undefined,
+                    count: v.reservationCount,
                   })),
                 )}
               />
@@ -160,7 +160,7 @@ function HomePage() {
                   stats.clientReservationCount.map((c) => ({
                     id: c.clientId,
                     label: `${c.clientFirstName} ${c.clientLastName}`,
-                    count: c.count,
+                    count: c.reservationCount,
                   })),
                 )}
               />

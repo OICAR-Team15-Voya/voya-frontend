@@ -106,45 +106,23 @@ export interface StatisticsDto {
 // Pojedinačni tipovi za statistike -  /voya/api/statistics
 export interface DriverReservationCount {
   driverId: number;
-  firstName: string;
-  lastName: string;
+  driverName: string;
+  driverLastName: string;
   count: number;
 }
 
 export interface VehicleReservationCount {
   vehicleId: number;
-  name: string | null;
-  registration: string;
-  count: number;
+  vehicleName: string | null;
+  vehicleRegistration: string;
+  reservationCount: number;
 }
 
 export interface ClientReservationCount {
   clientId: number;
-  firstName: string;
-  lastName: string;
-  count: number;
-}
-
-
-export interface DriverReservationCount {
-  driverId: number;
-  firstName: string;
-  lastName: string;
-  count: number;
-}
-
-export interface VehicleReservationCount {
-  vehicleId: number;
-  name: string | null;
-  registration: string;
-  count: number;
-}
-
-export interface ClientReservationCount {
-  clientId: number;
-  firstName: string;
-  lastName: string;
-  count: number;
+  clientFirstName: string;
+  clientLastName: string;
+  reservationCount: number;
 }
 
 export interface StatisticsDto {
